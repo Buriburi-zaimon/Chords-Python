@@ -81,6 +81,7 @@ async function initializeApplication() {
 // Render apps to the grid with improved card design
 function renderApps(apps) {
     const appGrid = document.getElementById('app-grid');
+    apps = apps.filter(app => app.category === 'EMG');
     
     if (!apps || apps.length === 0) {
         appGrid.innerHTML = `
@@ -237,34 +238,16 @@ function checkAllAppStatuses() {
 // Set up category filter with fixed options
 function setupCategoryFilter(apps) {
     const categorySelect = document.querySelector('select');
-    
-    const fixedCategories = ['All', 'ECG', 'EMG', 'EOG', 'EEG', 'Tools']; // Fixed filter options
-    categorySelect.innerHTML = '';        // Clear existing options
-    
-    // Add fixed options
-    fixedCategories.forEach(category => {
-        const option = document.createElement('option');
-        option.value = category;
-        option.textContent = category;
-        
-        // Disable option if no apps exist for this category (except 'All')
-        if (category !== 'All') {
-            const hasApps = apps.some(app => app.category === category);
-            option.disabled = !hasApps;
-            if (!hasApps) {
-                option.textContent += ' (0)';
-            }
-        }
-        
-        categorySelect.appendChild(option);
-    });
+    categorySelect.innerHTML = '';
 
-    // Add event listener for filtering
-    categorySelect.addEventListener('change', (e) => {
-        const selectedCategory = e.target.value;
-        filterAppsByCategory(selectedCategory, apps);
-    });
+    const option = document.createElement('option');
+    option.value = 'EMG';
+    option.textContent = 'EMG (MyoBand)';
+    categorySelect.appendChild(option);
+
+    categorySelect.disabled = true; // Lock filter
 }
+
 
 // Filter apps by category with smooth transition
 function filterAppsByCategory(category, allApps) {
@@ -396,7 +379,7 @@ function setProtocolButtonsDisabled(disabled) {
 
 // Initialize filename with default value
 function initializeFilename() {
-    const defaultName = `ChordsPy_${getTimestamp()}`;
+    const defaultName = `Myoband_${getTimestamp()}`;
     filenameInput.value = defaultName;
     filenameInput.placeholder = defaultName;
     filenameInput.disabled = false;              // Ensure input is enabled initially
